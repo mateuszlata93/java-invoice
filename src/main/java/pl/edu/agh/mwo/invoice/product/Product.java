@@ -1,6 +1,7 @@
 package pl.edu.agh.mwo.invoice.product;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public abstract class Product {
     private final String name;
@@ -10,6 +11,9 @@ public abstract class Product {
     private final BigDecimal taxPercent;
 
     protected Product(String name, BigDecimal price, BigDecimal tax) {
+        if (name == null || name == "" || price == null || price.compareTo(BigDecimal.ZERO) < 0){
+            throw new IllegalArgumentException("name should not be null");
+        }
         this.name = name;
         this.price = price;
         this.taxPercent = tax;
