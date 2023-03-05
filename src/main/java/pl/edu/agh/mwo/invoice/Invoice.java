@@ -9,6 +9,7 @@ public class Invoice {
     private List<Product> products = new ArrayList<>();
 
     public void addProduct(Product product) {
+        //test
         if (product == null) throw new IllegalArgumentException("product should not be null");
         this.products.add(product);
     }
