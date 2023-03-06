@@ -2,7 +2,7 @@ name: CI for Java Invoice
 on: [push]
 jobs:
   test:
-    name: Unit tests
+    name: Unit tests and check style
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,5 +13,5 @@ jobs:
           distribution: 'adopt'
       - name: Test
         run: mvn test
-      - name: Test
+      - name: Check style
         run: mvn checkstyle:check
