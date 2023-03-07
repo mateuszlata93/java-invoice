@@ -35,4 +35,12 @@ public abstract class Product {
     public BigDecimal getPriceWithTax() {
         return this.price.add(this.price.multiply(this.taxPercent));
     }
+
+    @Override
+    public String toString() {
+        return "Product: " +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", taxPercent=" + taxPercent;
+    }
 }

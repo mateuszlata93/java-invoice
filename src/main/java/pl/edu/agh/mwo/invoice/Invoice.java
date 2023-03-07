@@ -3,11 +3,23 @@ package pl.edu.agh.mwo.invoice;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import pl.edu.agh.mwo.invoice.product.Product;
 
 public class Invoice {
+    private static final AtomicInteger count = new AtomicInteger(0);
     private List<Product> products = new ArrayList<>();
+    private int id;
+
+    public Invoice(List<Product> products) {
+        this.products = products;
+        this.id = count.incrementAndGet();
+    }
+
+    public Invoice() {
+        this.id = count.incrementAndGet();
+    }
 
     public void addProduct(Product product) {
         //test
@@ -54,5 +66,17 @@ public class Invoice {
         return products.stream()
                 .map(product -> product.getPriceWithTax())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String printProducts() {
+        return products.toString();
     }
 }

@@ -90,7 +90,7 @@ public class InvoiceTest {
     }
 
     @Test
-    public void testInvoiceHasPropoerSubtotalWithQuantityMoreThanOne() {
+    public void testInvoiceHasProperSubtotalWithQuantityMoreThanOne() {
         // 2x kubek - price: 10
         invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal("5")), 2);
         // 3x kozi serek - price: 30
@@ -101,7 +101,7 @@ public class InvoiceTest {
     }
 
     @Test
-    public void testInvoiceHasPropoerTotalWithQuantityMoreThanOne() {
+    public void testInvoiceHasProperTotalWithQuantityMoreThanOne() {
         // 2x chleb - price with tax: 10
         invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 2);
         // 3x chedar - price with tax: 32.40
@@ -124,5 +124,26 @@ public class InvoiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void testAddingNullProduct() {
         invoice.addProduct(null);
+    }
+
+    @Test
+    public void testInvoiceHasId() {
+        Assert.assertTrue(invoice.getId() > 0);
+    }
+
+    @Test
+    public void testInvoicesHasIncrementedId() {
+        Invoice secondInvoice = new Invoice();
+        Assert.assertEquals(invoice.getId(), secondInvoice.getId() - 1);
+    }
+
+    @Test
+    public void testInvoicePrintProducts() {
+        Product onions = new TaxFreeProduct("Warzywa", new BigDecimal("10"));
+        invoice.addProduct(onions);
+        String printedProducts = invoice.printProducts();
+        System.out.println(printedProducts);
+        Assert.assertTrue(printedProducts.contains("Warzywa"));
+        Assert.assertTrue(printedProducts.contains("10"));
     }
 }
