@@ -146,4 +146,38 @@ public class InvoiceTest {
         Assert.assertTrue(printedProducts.contains("Warzywa"));
         Assert.assertTrue(printedProducts.contains("10"));
     }
+
+    @Test
+    public void testInvoicePrintMultipleProducts() {
+        Product onions = new TaxFreeProduct("Warzywa", new BigDecimal("10"));
+        invoice.addProduct(onions);
+        Product bread = new TaxFreeProduct("Chleb", new BigDecimal("5"));
+        invoice.addProduct(bread);
+        String printedProducts = invoice.printProducts();
+        System.out.println(printedProducts);
+        Assert.assertTrue(printedProducts.contains("Warzywa"));
+        Assert.assertTrue(printedProducts.contains("10 PLN"));
+        Assert.assertTrue(printedProducts.contains("Chleb"));
+        Assert.assertTrue(printedProducts.contains("5 PLN"));
+        Assert.assertTrue(printedProducts.endsWith("2"));
+    }
+
+    @Test
+    public void testAddSameProductsShouldNotIncreaseTotalProductsQuantity(){
+        Product bread1 = new TaxFreeProduct("Chleb", new BigDecimal("5"));
+        invoice.addProduct(bread1, 5);
+        Product bread2 = new TaxFreeProduct("Chleb", new BigDecimal("5"));
+        invoice.addProduct(bread2);
+        System.out.println(invoice.printProducts());
+        Assert.assertEquals(1, invoice.getProducts().size());
+    }
+
+    @Test
+    public void testAddSameProductsShouldIncreaseProductQuantity(){
+        Product bread1 = new TaxFreeProduct("Chleb", new BigDecimal("5"));
+        invoice.addProduct(bread1, 5);
+        Product bread2 = new TaxFreeProduct("Chleb", new BigDecimal("5"));
+        invoice.addProduct(bread2);
+        Assert.assertEquals((Integer) 6, invoice.getProducts().get(bread1));
+    }
 }

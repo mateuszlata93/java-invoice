@@ -1,6 +1,7 @@
 package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +10,10 @@ import pl.edu.agh.mwo.invoice.product.Product;
 public class Invoice {
     private static int nextId = 0;
     private final int id = ++nextId;
+
+    public Map<Product, Integer> getProducts() {
+        return products;
+    }
 
     private Map<Product, Integer> products = new HashMap<>();
 
@@ -25,7 +30,11 @@ public class Invoice {
         } else if (quantity <= 0) {
             throw new IllegalArgumentException("quantity should not be negative");
         }
-        this.products.put(product, quantity);
+        if (products.containsKey(product)){
+            products.put(product, quantity + products.get(product));
+        } else {
+            this.products.put(product, quantity);
+        }
     }
 
     public BigDecimal getSubtotal() {
@@ -69,7 +78,17 @@ public class Invoice {
         return id;
     }
 
+    public Integer getTotalProductsQuantity(){
+        return products.values().stream().reduce(0, Integer::sum);
+    }
+
     public String printProducts() {
-        return products.toString();
+        String invoice = "";
+        invoice += "Invoice number: " + id + "\n";
+        for (Product product : products.keySet()) {
+            invoice += product.getName() + ", quantity: " + products.get(product) + ", price: " + product.getPrice() + " " + Currency.getInstance("PLN") + "\n" ;
+        }
+        invoice += "Total products quantity: " + getTotalProductsQuantity();
+        return invoice;
     }
 }
