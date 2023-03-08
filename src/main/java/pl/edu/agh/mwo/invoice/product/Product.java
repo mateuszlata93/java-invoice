@@ -37,6 +37,14 @@ public abstract class Product {
     }
 
     @Override
+    public int hashCode() {
+        final int hash_salt = 31;
+        int result = name != null ? name.hashCode() : 0;
+        result = hash_salt * result + (taxPercent != null ? taxPercent.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
