@@ -7,11 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.agh.mwo.invoice.Invoice;
-import pl.edu.agh.mwo.invoice.product.DairyProduct;
-import pl.edu.agh.mwo.invoice.product.OtherProduct;
-import pl.edu.agh.mwo.invoice.product.Product;
-import pl.edu.agh.mwo.invoice.product.TaxFreeProduct;
+import pl.edu.agh.mwo.invoice.product.*;
 
 public class InvoiceTest {
     private Invoice invoice;
@@ -90,7 +86,7 @@ public class InvoiceTest {
     }
 
     @Test
-    public void testInvoiceHasPropoerSubtotalWithQuantityMoreThanOne() {
+    public void testInvoiceHasProperSubtotalWithQuantityMoreThanOne() {
         // 2x kubek - price: 10
         invoice.addProduct(new TaxFreeProduct("Kubek", new BigDecimal("5")), 2);
         // 3x kozi serek - price: 30
@@ -101,7 +97,7 @@ public class InvoiceTest {
     }
 
     @Test
-    public void testInvoiceHasPropoerTotalWithQuantityMoreThanOne() {
+    public void testInvoiceHasProperTotalWithQuantityMoreThanOne() {
         // 2x chleb - price with tax: 10
         invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 2);
         // 3x chedar - price with tax: 32.40
@@ -124,5 +120,63 @@ public class InvoiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void testAddingNullProduct() {
         invoice.addProduct(null);
+    }
+
+    @Test
+    public void testInvoiceHasId() {
+        Assert.assertTrue(invoice.getId() > 0);
+    }
+
+    @Test
+    public void testInvoicesHasIncrementedId() {
+        Invoice secondInvoice = new Invoice();
+        Assert.assertEquals(invoice.getId(), secondInvoice.getId() - 1);
+    }
+
+    @Test
+    public void testInvoicePrintProducts() {
+        Product onions = new TaxFreeProduct("Warzywa", new BigDecimal("10"));
+        invoice.addProduct(onions);
+        String printedProducts = invoice.printProducts();
+        Assert.assertTrue(printedProducts.contains("Warzywa"));
+        Assert.assertTrue(printedProducts.contains("10"));
+    }
+
+    @Test
+    public void testInvoicePrintMultipleProducts() {
+        Product onions = new TaxFreeProduct("Warzywa", new BigDecimal("10"));
+        invoice.addProduct(onions);
+        Product bread = new TaxFreeProduct("Chleb", new BigDecimal("5"));
+        invoice.addProduct(bread);
+        String printedProducts = invoice.printProducts();
+        Assert.assertTrue(printedProducts.contains("Warzywa"));
+        Assert.assertTrue(printedProducts.contains("10 PLN"));
+        Assert.assertTrue(printedProducts.contains("Chleb"));
+        Assert.assertTrue(printedProducts.contains("5 PLN"));
+        Assert.assertTrue(printedProducts.endsWith("2"));
+    }
+
+    @Test
+    public void testAddSameProductsShouldNotIncreaseTotalProductsQuantity(){
+        Product bread1 = new TaxFreeProduct("Chleb", new BigDecimal("5"));
+        invoice.addProduct(bread1, 5);
+        Product bread2 = new TaxFreeProduct("Chleb", new BigDecimal("5"));
+        invoice.addProduct(bread2);
+        Assert.assertEquals(1, invoice.getProducts().size());
+    }
+
+    @Test
+    public void testAddSameProductsShouldIncreaseProductQuantity(){
+        Product bread1 = new TaxFreeProduct("Chleb", new BigDecimal("5"));
+        invoice.addProduct(bread1, 5);
+        Product bread2 = new TaxFreeProduct("Chleb", new BigDecimal("5"));
+        invoice.addProduct(bread2);
+        Assert.assertEquals((Integer) 6, invoice.getProducts().get(bread1));
+    }
+
+    @Test
+    public void testExciseProductCost(){
+        Product fuelCanister = new ExciseProduct("FuelCanister", new BigDecimal("50"));
+        Assert.assertEquals(new BigDecimal("55.56"), fuelCanister.getPrice());
     }
 }
