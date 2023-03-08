@@ -30,7 +30,7 @@ public class Invoice {
         } else if (quantity <= 0) {
             throw new IllegalArgumentException("quantity should not be negative");
         }
-        if (products.containsKey(product)){
+        if (products.containsKey(product)) {
             products.put(product, quantity + products.get(product));
         } else {
             this.products.put(product, quantity);
@@ -78,7 +78,7 @@ public class Invoice {
         return id;
     }
 
-    public Integer getTotalProductsQuantity(){
+    public Integer getTotalProductsQuantity() {
         return products.values().stream().reduce(0, Integer::sum);
     }
 
@@ -86,7 +86,8 @@ public class Invoice {
         String invoice = "";
         invoice += "Invoice number: " + id + "\n";
         for (Product product : products.keySet()) {
-            invoice += product.getName() + ", quantity: " + products.get(product) + ", price: " + product.getPrice() + " " + Currency.getInstance("PLN") + "\n" ;
+            invoice += product.getName() + ", quantity: " + products.get(product)
+                    + ", price: " + product.getPrice() + " " + Currency.getInstance("PLN") + "\n";
         }
         invoice += "Total products quantity: " + getTotalProductsQuantity();
         return invoice;

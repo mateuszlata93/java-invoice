@@ -38,21 +38,21 @@ public abstract class Product {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Product product = (Product) o;
 
-        if (!Objects.equals(name, product.name)) return false;
-        if (!Objects.equals(price, product.price)) return false;
+        if (!Objects.equals(name, product.name)) {
+            return false;
+        }
+        if (!Objects.equals(price, product.price)) {
+            return false;
+        }
         return Objects.equals(taxPercent, product.taxPercent);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (price != null ? price.hashCode() : 0);
-        result = 31 * result + (taxPercent != null ? taxPercent.hashCode() : 0);
-        return result;
     }
 }
