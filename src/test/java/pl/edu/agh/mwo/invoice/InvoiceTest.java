@@ -7,11 +7,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.agh.mwo.invoice.Invoice;
-import pl.edu.agh.mwo.invoice.product.DairyProduct;
-import pl.edu.agh.mwo.invoice.product.OtherProduct;
-import pl.edu.agh.mwo.invoice.product.Product;
-import pl.edu.agh.mwo.invoice.product.TaxFreeProduct;
+import pl.edu.agh.mwo.invoice.product.*;
 
 public class InvoiceTest {
     private Invoice invoice;
@@ -142,7 +138,6 @@ public class InvoiceTest {
         Product onions = new TaxFreeProduct("Warzywa", new BigDecimal("10"));
         invoice.addProduct(onions);
         String printedProducts = invoice.printProducts();
-        System.out.println(printedProducts);
         Assert.assertTrue(printedProducts.contains("Warzywa"));
         Assert.assertTrue(printedProducts.contains("10"));
     }
@@ -154,7 +149,6 @@ public class InvoiceTest {
         Product bread = new TaxFreeProduct("Chleb", new BigDecimal("5"));
         invoice.addProduct(bread);
         String printedProducts = invoice.printProducts();
-        System.out.println(printedProducts);
         Assert.assertTrue(printedProducts.contains("Warzywa"));
         Assert.assertTrue(printedProducts.contains("10 PLN"));
         Assert.assertTrue(printedProducts.contains("Chleb"));
@@ -168,7 +162,6 @@ public class InvoiceTest {
         invoice.addProduct(bread1, 5);
         Product bread2 = new TaxFreeProduct("Chleb", new BigDecimal("5"));
         invoice.addProduct(bread2);
-        System.out.println(invoice.printProducts());
         Assert.assertEquals(1, invoice.getProducts().size());
     }
 
@@ -179,5 +172,11 @@ public class InvoiceTest {
         Product bread2 = new TaxFreeProduct("Chleb", new BigDecimal("5"));
         invoice.addProduct(bread2);
         Assert.assertEquals((Integer) 6, invoice.getProducts().get(bread1));
+    }
+
+    @Test
+    public void testExciseProductCost(){
+        Product fuelCanister = new ExciseProduct("FuelCanister", new BigDecimal("50"));
+        Assert.assertEquals(new BigDecimal("55.56"), fuelCanister.getPrice());
     }
 }
